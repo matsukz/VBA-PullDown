@@ -1,11 +1,11 @@
 ご覧いただきありがとうございます。<br>
-<a href=https://github.com/matsukz/VBA/blob/main/README.md>このプログラム</a>を流用したものとなります。<br>
+<a href=https://github.com/matsukz/VBA/blob/main/>このプログラム</a>を流用したものとなります。<br>
 原作の注意事項はほぼ同じとなるので異なる点だけ書き残しておきます。
 
 # 共通事項
-<a href=https://github.com/matsukz/VBA/blob/main/README.md>原作</a>と変わらずです。
+<a href=https://github.com/matsukz/VBA/blob/main/>原作</a>と変わらずです。
 # 操作方法
-機能は<a href=https://github.com/matsukz/VBA/blob/main/README.md>原作</a>と同じです。<br>
+機能は<a href=https://github.com/matsukz/VBA/blob/main/>原作</a>と同じです。<br>
 ボタンのかわりにプルダウンメニューを採用し実行ボタンを統一しました。<br>
 使いたい機能をプルダウンメニューを選択しExecuteボタンで実行します。<br>
 追加した機能は下記のとおりです。
