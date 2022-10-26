@@ -4,7 +4,7 @@
 
 # 共通事項
 <a href=https://github.com/matsukz/VBA/>原作</a>と変わらずです。<br>
-訂正：メイン→オブジェクト<br)
+訂正：メイン→オブジェクト<br>
       オプション→メソッド
 # 操作方法
 機能は<a href=https://github.com/matsukz/VBA>原作</a>と同じです。<br>
