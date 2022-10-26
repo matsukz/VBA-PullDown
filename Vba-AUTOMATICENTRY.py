@@ -4,6 +4,7 @@ from multiprocessing import AuthenticationError
 import tkinter, tkinter.messagebox
 from tkinter import ttk
 import tkinter.font as f
+from numpy import insert
 import pyautogui
 import pyperclip
 import subprocess
@@ -67,10 +68,10 @@ def exe():
         if combobox.get() == "Range":
             try:
                 Lmain = "Range(\""
-                pyperclip.copy(msell)
                 Rmain =  "\")"    
 
                 pyautogui.write(Lmain)
+                pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
                 pyautogui.write(Rmain)
 
@@ -80,7 +81,6 @@ def exe():
                 else :
                         pass
 
-                pyautogui.write(Rmain)
                 pyautogui.press("Return")
 
             except Exception as e :
@@ -189,17 +189,14 @@ def Hojyo():
     
     global sCount
     sRadio = tkinter.IntVar()
-    sRadio.set([0])
+    sRadio.set(0)
     if sCount == 0 :
         sCount = sCount + 1
         sWindow = tkinter.Toplevel()
 
         sWindow.title("関数の補助")
         sWindow.geometry("400x400")
-        sWindow.protocol(
-            "WM_DELETE_WINDOW", 
-            (lambda: "pass")()
-            )
+
         sWindow.attributes("-topmost", True)
         sWindow.resizable(0,0)
 
@@ -213,7 +210,7 @@ def Hojyo():
         sfont = tkinter.Label(sWindow, text="色の設定")
         sfont.place(x=30, y=30)
 
-        Flist = ("文字の色（Font）", "セルの色（Interior）")
+        Flist = ("文字の色", "セルの色")
         Fcombobox = ttk.Combobox(
             sWindow, 
             values=Flist, 
@@ -225,16 +222,16 @@ def Hojyo():
         Fcombobox.set(Flist[0])
         Fcombobox.place(x=100, y=30)
 
-        cIquT = tkinter.Label(sWindow, text="=", font=("nomal", "14", "bold"))
-        cIquT.place(x=260, y=27)
+        cIquT = tkinter.Label(sWindow, text="=", font=("nomal", "16", "bold"))
+        cIquT.place(x=290, y=40)
 
         cIquB = tkinter.Text(
             sWindow,
-            font=("", "16"),
-            width=3,
+            font=("", "17"),
+            width=4,
             height=1
         )
-        cIquB.place(x=280, y=30)
+        cIquB.place(x=330, y=40)
 
         DRadio = tkinter.Radiobutton(
             sWindow,
@@ -247,10 +244,10 @@ def Hojyo():
         sdim.place(x=30, y=60)
 
         Dlist = (
-            "長整数型（Long）", 
-            "倍精度浮動小数点型（Double）", 
-            "文字列型（String）", 
-            "ALLデータ型（Variant）"
+            "長整数型", 
+            "倍精度浮動小数点型", 
+            "文字列型", 
+            "ALLデータ型"
             )
         Dcombobox = ttk.Combobox(
             sWindow, 
@@ -264,13 +261,50 @@ def Hojyo():
         Dcombobox.place(x=100, y=60)
 
         def mainclip():
-            psRadio = sRadio.get()
-            print(psRadio)
+
+            global otxtbox
+            global combobox
+            otxtbox.delete("1.0", "end-1c")
+
+            if sRadio.get() == 0 :
+
+                if Fcombobox.get() == "文字の色" :
+                    otxtbox.insert("1.0", ".font.colorindex=" + str(cIquB.get("1.0", "end-1c")))
+                    combobox.set(FXlist[1])
+                elif Fcombobox.get() == "セルの色" :
+                    otxtbox.insert("1.0", ".Interior.colorindex=" + str(cIquB.get("1.0", "end-1c")))
+                    combobox.set(FXlist[1])
+                else:
+                    tkinter.messagebox.showerror("ERROR", "範囲：mainclip Fcombobox sRadio")
+
+            if sRadio.get() == 1 :
+
+                if Dcombobox.get() == "長整数型":
+                    otxtbox.insert("1.0", "Long")
+                    combobox.set(FXlist[3])
+
+                elif Dcombobox.get() == "倍精度浮動小数点型" :
+                    otxtbox.insert("1.0", "Double")
+                    combobox.set(FXlist[3])
+
+                elif Dcombobox.get() == "文字列型" :
+                    otxtbox.insert("1.0", "String")
+                    combobox.set(FXlist[3])
+
+                elif Dcombobox.get() == "ALLデータ型" :
+                    otxtbox.insert("1.0", "Variant")
+                    combobox.set(FXlist[3])
+
+                else :
+                    tkinter.messagebox.showerror("ERROR", "範囲：mainclip Dcombobox sRando")
 
         def close():
             global sCount
             sCount = sCount - 1
+            print(sCount)
             sWindow.destroy()
+
+        sWindow.protocol("WM_DELETE_WINDOW", close)
 
         mainclip_button = tkinter.Button(sWindow, text="クリップ",command=mainclip,width=16,height=3)
         mainclip_button.place(x=180,y=130)
