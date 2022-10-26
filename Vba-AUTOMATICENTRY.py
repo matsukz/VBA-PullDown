@@ -54,7 +54,6 @@ combobox = ttk.Combobox(
 combobox.set(FXlist[0])
 
 def exe():
-    print(combobox.get())
 
     msell = ""
     osell = ""
@@ -90,7 +89,6 @@ def exe():
             try:
                 Copy = ""
                 pyperclip.copy(msell)
-                print(Copy)
 
                 pyautogui.write("Sub ")
                 pyautogui.hotkey("ctrl", "v")
@@ -195,7 +193,7 @@ def Hojyo():
         sWindow = tkinter.Toplevel()
 
         sWindow.title("関数の補助")
-        sWindow.geometry("400x400")
+        sWindow.geometry("380x200")
 
         sWindow.attributes("-topmost", True)
         sWindow.resizable(0,0)
@@ -223,7 +221,7 @@ def Hojyo():
         Fcombobox.place(x=100, y=30)
 
         cIquT = tkinter.Label(sWindow, text="=", font=("nomal", "16", "bold"))
-        cIquT.place(x=290, y=40)
+        cIquT.place(x=270, y=26)
 
         cIquB = tkinter.Text(
             sWindow,
@@ -231,7 +229,7 @@ def Hojyo():
             width=4,
             height=1
         )
-        cIquB.place(x=330, y=40)
+        cIquB.place(x=300, y=27)
 
         DRadio = tkinter.Radiobutton(
             sWindow,
@@ -301,19 +299,14 @@ def Hojyo():
         def close():
             global sCount
             sCount = sCount - 1
-            print(sCount)
             sWindow.destroy()
 
         sWindow.protocol("WM_DELETE_WINDOW", close)
 
-        mainclip_button = tkinter.Button(sWindow, text="クリップ",command=mainclip,width=16,height=3)
-        mainclip_button.place(x=180,y=130)
-
-        calc_button = tkinter.Button(sWindow, text="閉じる",command=close,width=16,height=3)
-        calc_button.place(x=60,y=130)
+        mainclip_button = tkinter.Button(sWindow, text="メソッド挿入",command=mainclip,width=20,height=3)
+        mainclip_button.place(x=100,y=130)
 
     else:
-        print("sCount ERROR!! sCount is " + str(sCount))
         pass
 
 Execute_button = tkinter.Button(text="Execute",command=exe,width=16,height=3)
