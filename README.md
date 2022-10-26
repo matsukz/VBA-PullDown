@@ -3,7 +3,9 @@
 原作の注意事項はほぼ同じとなるので異なる点だけ書き残しておきます。
 
 # 共通事項
-<a href=https://github.com/matsukz/VBA/>原作</a>と変わらずです。
+<a href=https://github.com/matsukz/VBA/>原作</a>と変わらずです。<br>
+訂正：メイン→オブジェクト
+     オプション→メソッド
 # 操作方法
 機能は<a href=https://github.com/matsukz/VBA>原作</a>と同じです。<br>
 ボタンのかわりにプルダウンメニューを採用し実行ボタンを統一しました。<br>
