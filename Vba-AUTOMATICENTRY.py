@@ -1,5 +1,6 @@
 from asyncore import write
 from cgitb import text
+from logging import exception
 from multiprocessing import AuthenticationError
 import tkinter, tkinter.messagebox
 from tkinter import ttk
@@ -48,8 +49,10 @@ FXlist = (
     "Range",
     "AutoFill",
     "Dim",
+    "Worksheets",
+    "IF",
     "MessageBox",
-    "Worksheets")
+    )
 combobox = ttk.Combobox(
     root, 
     values=FXlist, 
@@ -107,8 +110,8 @@ def exe():
 
                 if mckb.get()==True:
                     pyautogui.write("Cells.delet")
+                    pyautogui.press("Return")
                 
-                pyautogui.press("Return")
             
             except Exception as e:
                 tkinter.messagebox.showerror("ERROR", "範囲：sub")
@@ -185,6 +188,31 @@ def exe():
 
             except Exception as e:
                 tkinter.messagebox.showerror("ERROR", "範囲：worksheets")
+
+        elif combobox.get()=="IF": 
+            try:
+                pyautogui.write("if Range(\"") 
+                pyperclip.copy(msell)
+                pyautogui.hotkey("ctrl","v")
+                pyautogui.write("\")")
+
+                pyperclip.copy(osell)
+                pyautogui.hotkey("ctrl","v")
+
+                pyautogui.write(" then")
+
+                pyautogui.press("Return")
+                pyautogui.press("Tab")
+
+                pyautogui.press("Return")
+                pyautogui.press("BackSpace")
+                pyautogui.write("end if")
+
+                pyautogui.press("up")
+
+            except Exception as e:
+                tkinter.messagebox.showerror("ERROR", "範囲：IF")
+
         else:
             tkinter.messagebox.showerror("ERROR", "Combobox RANGE ERROR")
 
@@ -193,6 +221,9 @@ def exe():
             otxtbox.delete("1.0", "end-1c")
         else:
             pass
+
+
+
 
         subprocess.run("echo off | clip", shell=True)
         mtxtbox.focus()
