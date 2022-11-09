@@ -9,6 +9,7 @@ from numpy import insert
 import pyautogui
 import pyperclip
 import subprocess
+import time
 
 root = tkinter.Tk()
 root.title("Vba-AUTOMATICENTRY")
@@ -16,7 +17,7 @@ root.geometry("250x270")
 root.attributes("-topmost", True)
 root.resizable(0,0)
 
-mtxtbox = tkinter.Text(font=("", 16))
+mtxtbox = tkinter.Text(root, font=("", 16))
 mtxtbox.place(
     x=60,
     y=10,
@@ -63,7 +64,6 @@ combobox = ttk.Combobox(
 combobox.set(FXlist[0])
 
 def exe():
-    print(combobox.get())
 
     msell = ""
     osell = ""
@@ -71,9 +71,20 @@ def exe():
     msell = mtxtbox.get("1.0", "end-1c")
     osell = otxtbox.get("1.0", "end-1c")
     
-    if not msell == "":
+    if not mtxtbox.get("1.0", "end-1c") == "":
+
+        eWindow = tkinter.Toplevel()
+        eWindow.title("Running...")
+        eWindow.geometry("250x100+700+0")
+        eWindow.attributes("-topmost", True)
+        eWindow.resizable(0,0)
+        efont = tkinter.Label(eWindow, text="自動操作中")
+        efont.place(x=30, y=20)
+
+        eWindow.update()
 
         pyautogui.click(48, 0)
+        
         if combobox.get() == "Range":
             try:
                 Lmain = "Range(\""
@@ -203,11 +214,17 @@ def exe():
 
                 pyautogui.press("Return")
                 pyautogui.press("Tab")
-
+                pyautogui.press("Return")
+                pyautogui.press("BackSpace")
+                pyautogui.write("else")
+                pyautogui.press("Return")
+                pyautogui.press("Tab")
                 pyautogui.press("Return")
                 pyautogui.press("BackSpace")
                 pyautogui.write("end if")
 
+                pyautogui.press("up")
+                pyautogui.press("up")
                 pyautogui.press("up")
 
             except Exception as e:
@@ -222,14 +239,15 @@ def exe():
         else:
             pass
 
-
-
-
         subprocess.run("echo off | clip", shell=True)
         mtxtbox.focus()
+
+        eWindow.destroy()
+
     else:
         tkinter.messagebox.showerror("ERROR", "文字を入力してください。")
 
+    
 def mdelete():
     mtxtbox.delete("1.0", "end-1c")
     mtxtbox.focus()
@@ -360,7 +378,9 @@ def Hojyo():
 
     else:
         print("sCount ERROR!! sCount is " + str(sCount))
-        pass
+        
+    
+
 
 Execute_button = tkinter.Button(text="Execute",command=exe,width=16,height=3)
 Execute_button.place(x=70,y=140)
