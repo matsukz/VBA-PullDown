@@ -10,10 +10,11 @@ import pyautogui
 import pyperclip
 import subprocess
 import time
+import pygetwindow as gw
 
 root = tkinter.Tk()
 root.title("Vba-AUTOMATICENTRY")
-root.geometry("250x270")
+root.geometry("250x270+600+100")
 root.attributes("-topmost", True)
 root.resizable(0,0)
 
@@ -68,6 +69,8 @@ def exe():
     msell = ""
     osell = ""
 
+    wTitle = "Microsoft Visual Basic for Applications"
+
     msell = mtxtbox.get("1.0", "end-1c")
     osell = otxtbox.get("1.0", "end-1c")
     
@@ -82,11 +85,11 @@ def exe():
         efont.place(x=30, y=20)
 
         eWindow.update()
-
-        pyautogui.click(48, 0)
         
         if combobox.get() == "Range":
             try:
+                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
+                ACwindow.activate()
                 Lmain = "Range(\""
                 Rmain =  "\")"    
 
@@ -107,6 +110,8 @@ def exe():
                 tkinter.messagebox.showerror("ERROR", "範囲：Range")
 
         elif combobox.get()=="Sub":
+            ACwindow = gw.getWindowsWithTitle(wTitle)[0]
+            ACwindow.activate()
             try:
                 Copy = ""
                 pyperclip.copy(msell)
@@ -130,6 +135,8 @@ def exe():
         elif combobox.get()=="AutoFill":
 
             try:
+                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
+                ACwindow.activate()
                 Lmain = "Range(\""
                 Nmain = ".Autofill Destination:="
                 Rmain = "\")"
@@ -154,7 +161,8 @@ def exe():
             
         elif combobox.get() == "Dim":
             try:
-
+                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
+                ACwindow.activate()
                 pyautogui.write("Dim ")
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
@@ -175,6 +183,8 @@ def exe():
 
         elif combobox.get() == "MessageBox":
             try:
+                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
+                ACwindow.activate()
                 pyautogui.write("Msgbox \"")
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
@@ -185,6 +195,8 @@ def exe():
                 tkinter.messagebox.showerror("ERROR", "範囲：MessageBox")
         elif combobox.get() == "Worksheets":
             try:
+                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
+                ACwindow.activate()
                 pyautogui.write("worksheets(\"")
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
@@ -202,6 +214,8 @@ def exe():
 
         elif combobox.get()=="IF": 
             try:
+                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
+                ACwindow.activate()
                 pyautogui.write("if Range(\"") 
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl","v")
@@ -377,11 +391,10 @@ def Hojyo():
         mainclip_button.place(x=100,y=130)
 
     else:
+        sACwindows = gw.getWindowsWithTitle("関数の補助")[0]
+        sACwindows.activate()
         print("sCount ERROR!! sCount is " + str(sCount))
-        
     
-
-
 Execute_button = tkinter.Button(text="Execute",command=exe,width=16,height=3)
 Execute_button.place(x=70,y=140)
 
