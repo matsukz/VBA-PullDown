@@ -102,7 +102,7 @@ def exe():
                     pyperclip.copy(osell)
                     pyautogui.hotkey("ctrl", "v")
                 else:
-                        pass
+                    pass
 
                 pyautogui.press("Return")
 
