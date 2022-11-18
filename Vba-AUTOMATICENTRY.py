@@ -45,6 +45,7 @@ delckb = tkinter.BooleanVar()
 delckb.set(True)
 
 sCount = 0
+CountdWindow = 0
 
 FXlist = (
     "Sub",
@@ -71,6 +72,8 @@ def exe():
 
     wTitle = "Microsoft Visual Basic for Applications"
 
+    subprocess.run("echo off | clip", shell=True)
+
     msell = mtxtbox.get("1.0", "end-1c")
     osell = otxtbox.get("1.0", "end-1c")
     
@@ -90,16 +93,21 @@ def exe():
             try:
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
+#                pyautogui.click(50,0)
                 Lmain = "Range(\""
-                Rmain =  "\")"    
+                Rmain =  "\")"
+
+                time.sleep(1)
 
                 pyautogui.write(Lmain)
                 pyperclip.copy(msell)
+                print(msell)
                 pyautogui.hotkey("ctrl", "v")
                 pyautogui.write(Rmain)
 
                 if not osell=="":
                     pyperclip.copy(osell)
+                    print(osell)
                     pyautogui.hotkey("ctrl", "v")
                 else:
                     pass
@@ -112,6 +120,9 @@ def exe():
         elif combobox.get()=="Sub":
             ACwindow = gw.getWindowsWithTitle(wTitle)[0]
             ACwindow.activate()
+
+            time.sleep(1)
+
             try:
                 Copy = ""
                 pyperclip.copy(msell)
@@ -141,6 +152,8 @@ def exe():
                 Nmain = ".Autofill Destination:="
                 Rmain = "\")"
 
+                time.sleep(1)
+
                 pyautogui.write(Lmain)
 
                 pyperclip.copy(msell)
@@ -163,6 +176,9 @@ def exe():
             try:
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
+
+                time.sleep(1)
+
                 pyautogui.write("Dim ")
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
@@ -185,18 +201,33 @@ def exe():
             try:
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
+
+                time.sleep(1)
+
                 pyautogui.write("Msgbox \"")
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
                 pyautogui.write("\"")
+                
+
+                if not osell == "":
+                    pyautogui.write(",title:=\"")
+                    pyperclip.copy(osell)
+                    pyautogui.hotkey("ctrl", "v")
+                    pyautogui.write("\"")
+
                 pyautogui.press("Return")
-            
+
             except Exception as e:
                 tkinter.messagebox.showerror("ERROR", "範囲：MessageBox")
+
         elif combobox.get() == "Worksheets":
             try:
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
+
+                time.sleep(1)
+
                 pyautogui.write("worksheets(\"")
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
@@ -216,6 +247,9 @@ def exe():
             try:
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
+
+                time.sleep(1)
+
                 pyautogui.write("if Range(\"") 
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl","v")
@@ -325,8 +359,10 @@ def Hojyo():
         DRadio.place(x=10, y=60)
 
         Dlist = (
+            "バイト型",
+            "整数型",
             "長整数型", 
-            "倍精度浮動小数点型", 
+            "単精度浮動小数点型", 
             "文字列型", 
             "ALLデータ型"
             )
@@ -342,6 +378,8 @@ def Hojyo():
         Dcombobox.place(x=100, y=60)
 
         def mainclip():
+
+            CountdWindow = 0
 
             global otxtbox
             global combobox
@@ -360,24 +398,105 @@ def Hojyo():
 
             if sRadio.get() == 1:
 
-                if Dcombobox.get() == "長整数型":
+                Dcbbox = Dcombobox.get()
+
+                if Dcbbox == "バイト型":
+                    otxtbox.insert("1.0", "Byte")
+                    combobox.set(FXlist[3])
+
+                elif Dcbbox == "整数型":
+                    otxtbox.insert("1.0", "integer")
+
+                elif Dcbbox == "長整数型":
                     otxtbox.insert("1.0", "Long")
                     combobox.set(FXlist[3])
 
-                elif Dcombobox.get() == "倍精度浮動小数点型":
-                    otxtbox.insert("1.0", "Double")
+                elif Dcbbox == "単精度浮動小数点型":
+                    otxtbox.insert("1.0", "single")
                     combobox.set(FXlist[3])
 
-                elif Dcombobox.get() == "文字列型":
+                elif Dcbbox == "文字列型":
                     otxtbox.insert("1.0", "String")
                     combobox.set(FXlist[3])
 
-                elif Dcombobox.get() == "ALLデータ型":
+                elif Dcbbox == "ALLデータ型":
                     otxtbox.insert("1.0", "Variant")
                     combobox.set(FXlist[3])
 
                 else:
                     tkinter.messagebox.showerror("ERROR", "範囲：mainclip Dcombobox sRando")
+            
+            hACwinodw = gw.getWindowsWithTitle("Vba-AUTOMATICENTRY")[0]
+            hACwinodw.activate()
+
+        def Dhelp():
+
+            global CountdWindow
+
+            if CountdWindow == 0:
+
+                CountdWindow = 1
+
+                dWindow = tkinter.Toplevel(master=sWindow)
+                dWindow.title("型について")
+                dWindow.geometry("380x150")
+                dWindow.attributes("-topmost", True)
+                dWindow.resizable(0,0)
+
+                HelpDcbbox = Dcombobox.get()
+
+                if HelpDcbbox == "バイト型":
+                    dfont = "・性質：数値（整数）\n・範囲：0から255\n・使用RAM：1バイト\n・備考：小数点以下は代入されません。"
+
+                elif HelpDcbbox == "整数型":
+                    dfont = "・性質：数値（整数）\n・範囲：-32,768から32,767 \n・使用RAMを2バイト\n・備考：小数点以下は代入されません。"
+
+                elif HelpDcbbox == "長整数型":
+                    dfont = "・性質：数値（整数）\n・範囲：-2,147,483,648から2,147,483,647\n・使用RAM：4バイト。\n・備考：小数点以下は代入されません。"
+
+                elif HelpDcbbox == "単精度浮動小数点型":
+                    dfont = "・性質：数値（少数）\n・範囲：±3.4×10^38\n・使用RAM：4バイト\n・備考：少数の処理が可能です。"
+
+                elif HelpDcbbox == "文字列型":
+                    dfont = "・性質：文字列\n・範囲：約20×10^7文字\n・使用RAM：2バイト\n・備考：数字を入力しても文字列になります。"
+
+                elif HelpDcbbox == "ALLデータ型":
+                    dfont = "・性質：すべて\n・範囲：すべて\n・使用RAM：16バイト\n・備考：多くRAMを使用するため非推奨。"
+
+                else:
+                    tkinter.messagebox.showerror("ERROR", "範囲：mainclip Dfont")
+
+                Tpdfont = tkinter.Label(
+                    dWindow,
+                    text=HelpDcbbox,
+                    font=("",20)
+                )
+                Tpdfont.place(x=10,y=10)
+
+                pdfont = tkinter.Label(
+                    dWindow,
+                    text=dfont,
+                    justify="left",
+                    font=("",15))
+                pdfont.place(x=10,y=45)
+
+            else:
+                try:
+                    dACwinodw = gw.getWindowsWithTitle("型について")[0]
+                    dACwinodw.activate()
+                except IndexError:
+                    CountdWindow = CountdWindow -1
+                    return ("Dhelp")
+
+            def dclose():
+
+                global CountdWindow
+
+                CountdWindow = CountdWindow -1
+                print(CountdWindow)
+                dWindow.destroy()    
+
+            dWindow.protocol("WM_DELETE_WINDOW", dclose)
 
         def close():
             global sCount
@@ -390,9 +509,14 @@ def Hojyo():
         mainclip_button = tkinter.Button(sWindow, text="メソッド挿入",command=mainclip,width=20,height=3)
         mainclip_button.place(x=100,y=130)
 
+        Dhelp_button = tkinter.Button(sWindow,text="型とは？", command=Dhelp,width=10,height=1)
+        Dhelp_button.place(x=280,y=60)
     else:
         sACwindows = gw.getWindowsWithTitle("関数の補助")[0]
         sACwindows.activate()
+
+        time.sleep(1)
+
         print("sCount ERROR!! sCount is " + str(sCount))
     
 Execute_button = tkinter.Button(text="Execute",command=exe,width=16,height=3)
