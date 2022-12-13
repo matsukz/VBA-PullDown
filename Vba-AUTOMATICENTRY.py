@@ -52,9 +52,9 @@ FXlist = (
     "Range",
     "AutoFill",
     "Dim",
-    "Worksheets",
     "IF",
     "MessageBox",
+    "Worksheets"
     )
 combobox = ttk.Combobox(
     root, 
@@ -84,7 +84,7 @@ def exe():
         eWindow.geometry("250x100+700+0")
         eWindow.attributes("-topmost", True)
         eWindow.resizable(0,0)
-        efont = tkinter.Label(eWindow, text="自動操作中")
+        efont = tkinter.Label(eWindow, text="自動操作中",font=("",15))
         efont.place(x=30, y=20)
 
         eWindow.update()
@@ -93,21 +93,22 @@ def exe():
             try:
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
-#                pyautogui.click(50,0)
                 Lmain = "Range(\""
                 Rmain =  "\")"
 
-                time.sleep(1)
+                time.sleep(0.5)
 
                 pyautogui.write(Lmain)
                 pyperclip.copy(msell)
-                print(msell)
+                print("msell =" +msell)
+                time.sleep(0.5)
                 pyautogui.hotkey("ctrl", "v")
                 pyautogui.write(Rmain)
 
                 if not osell=="":
                     pyperclip.copy(osell)
-                    print(osell)
+                    print("osell =" + osell)
+                    time.sleep(0.5)
                     pyautogui.hotkey("ctrl", "v")
                 else:
                     pass
@@ -121,13 +122,12 @@ def exe():
             ACwindow = gw.getWindowsWithTitle(wTitle)[0]
             ACwindow.activate()
 
-            time.sleep(1)
+            time.sleep(0.5)
 
             try:
-                Copy = ""
+                print("msell = " + msell)
                 pyperclip.copy(msell)
-                print(Copy)
-
+                
                 pyautogui.write("Sub ")
                 pyautogui.hotkey("ctrl", "v")
 
@@ -139,7 +139,6 @@ def exe():
                     pyautogui.write("Cells.delet")
                     pyautogui.press("Return")
                 
-            
             except Exception as e:
                 tkinter.messagebox.showerror("ERROR", "範囲：sub")
 
@@ -152,7 +151,7 @@ def exe():
                 Nmain = ".Autofill Destination:="
                 Rmain = "\")"
 
-                time.sleep(1)
+                time.sleep(0.5)
 
                 pyautogui.write(Lmain)
 
@@ -177,16 +176,15 @@ def exe():
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
 
-                time.sleep(1)
+                time.sleep(0.5)
 
                 pyautogui.write("Dim ")
                 pyperclip.copy(msell)
                 pyautogui.hotkey("ctrl", "v")
 
-                if not osell == "":
-                    pyautogui.write(" As " + osell)
-                else:
-                    pass
+                pyautogui.write("As ")
+                pyperclip.copy(osell)
+                pyautogui.hotkey("ctrl", "v")
                 
                 pyautogui.press("Return")
 
@@ -202,7 +200,7 @@ def exe():
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
 
-                time.sleep(1)
+                time.sleep(0.5)
 
                 pyautogui.write("Msgbox \"")
                 pyperclip.copy(msell)
@@ -226,7 +224,7 @@ def exe():
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
 
-                time.sleep(1)
+                time.sleep(0.5)
 
                 pyautogui.write("worksheets(\"")
                 pyperclip.copy(msell)
@@ -248,13 +246,21 @@ def exe():
                 ACwindow = gw.getWindowsWithTitle(wTitle)[0]
                 ACwindow.activate()
 
-                time.sleep(1)
+                time.sleep(0.5)
 
                 pyautogui.write("if Range(\"") 
+
+                time.sleep(0.5)
+
                 pyperclip.copy(msell)
+
+                time.sleep(0.5)
+
                 pyautogui.hotkey("ctrl","v")
+                
                 pyautogui.write("\")")
 
+                time.sleep(0.5)
                 pyperclip.copy(osell)
                 pyautogui.hotkey("ctrl","v")
 
@@ -335,7 +341,7 @@ def Hojyo():
             width= 20,
             state="readonly",
             textvariable= tkinter.StringVar(),
-            )
+        )
         Fcombobox.set(Flist[0])
         Fcombobox.place(x=100, y=30)
 
@@ -365,7 +371,7 @@ def Hojyo():
             "単精度浮動小数点型", 
             "文字列型", 
             "ALLデータ型"
-            )
+        )
         Dcombobox = ttk.Combobox(
             sWindow, 
             values = Dlist, 
@@ -373,9 +379,58 @@ def Hojyo():
             width = 25,
             state ="readonly",
             textvariable = tkinter.StringVar(),
-            )
+        )
         Dcombobox.set(Dlist[0])
         Dcombobox.place(x=100, y=60)
+
+        Border_Radio = tkinter.Radiobutton(
+            sWindow,
+            value=2,
+            variable=sRadio,
+            text="罫線"
+        )
+        Border_Radio.place(x=10, y=90)
+
+        Border_Style_List = (
+            "線なし",
+            "一重線",
+            "二重線",
+            "破線",
+            "一点鎖線",
+            "二点鎖線",
+            "点線",
+            "斜破線"
+        )
+
+        Border_Style_Combobox = ttk.Combobox(
+            sWindow,
+            values = Border_Style_List,
+            height = 6,
+            width = 25,
+            state = "readonly",
+            textvariable = tkinter.StringVar()
+        )
+        Border_Style_Combobox.set(Border_Style_List[0])
+        Border_Style_Combobox.place(x=100,y=90)
+
+        Border_Style_Weight_List = (
+            "極細線",
+            "細線",
+            "中太線",
+            "太線"
+        )
+
+        Border_Style_Weight_Combobox = ttk.Combobox(
+            sWindow,
+            values = Border_Style_Weight_List,
+            height = 6,
+            width = 25,
+            state = "readonly",
+            textvariable = tkinter.StringVar()
+        )
+        Border_Style_Weight_Combobox.set(Border_Style_Weight_List[0])
+        Border_Style_Weight_Combobox.place(x=100,y=120)
+
 
         def mainclip():
 
@@ -426,6 +481,65 @@ def Hojyo():
                 else:
                     tkinter.messagebox.showerror("ERROR", "範囲：mainclip Dcombobox sRando")
             
+            if sRadio.get() == 2:
+                Border_Style_get = Border_Style_Combobox.get()
+
+                if Border_Style_get == "線なし":
+                    Border_Style_inst = "xlLineStyleNone"
+
+                elif Border_Style_get == "一重線":
+                    Border_Style_inst = "xlContinuous"
+
+                elif Border_Style_get == "二重線":
+                    Border_Style_inst = "xlDouble"
+
+                elif Border_Style_get == "破線":
+                    Border_Style_inst = "xlDash"
+
+                elif Border_Style_get == "一点鎖線":
+                    Border_Style_inst = "xlDashDot"
+                
+                elif Border_Style_get == "二点鎖線":
+                    Border_Style_inst
+
+                elif Border_Style_get == "点線":
+                    Border_Style_inst == "xlDot"
+
+                elif Border_Style_get == "斜破線":
+                    Border_Style_inst == "xlSlantDashDot"
+
+                else:
+                    tkinter.messagebox.showerror("ERROR", "範囲エラー：Border_Style")
+                
+                Border_style_Weight_get = Border_Style_Weight_Combobox.get()
+                
+                if Border_style_Weight_get == "極細線":
+                    Border_Style_Weight_inst = "xlHairline"
+                
+                elif Border_style_Weight_get == "細線":
+                    Border_Style_Weight_inst = "xlThin"
+
+                elif Border_style_Weight_get == "中太線":
+                    Border_Style_Weight_inst = "xlMedium"
+                
+                elif Border_style_Weight_get == "太線":
+                    Border_Style_Weight_inst = "xlThick"
+                
+                else:
+                    tkinter.messagebox.showerror("ERROR", "範囲エラー：Border_style_Weight")
+
+                #print(Border_Style_inst)
+                #print(Border_Style_Weight_inst)
+
+                pyautogui.write("")
+
+                otxtbox.insert(
+                    "1.0",
+                    ".BorderAround " + Border_Style_inst + " , " + Border_Style_Weight_inst + " , " + str(cIquB.get("1.0", "end-1c"))
+                    )
+
+                combobox.set(FXlist[1])
+
             hACwinodw = gw.getWindowsWithTitle("Vba-AUTOMATICENTRY")[0]
             hACwinodw.activate()
 
@@ -446,19 +560,19 @@ def Hojyo():
                 HelpDcbbox = Dcombobox.get()
 
                 if HelpDcbbox == "バイト型":
-                    dfont = "・性質：数値（整数）\n・範囲：0から255\n・使用RAM：1バイト\n・備考：小数点以下は代入されません。"
+                    dfont = "・性質：数値（整数）\n・範囲：0から255\n・使用RAM：1バイト\n・備考：小数点以下は考慮されません。"
 
                 elif HelpDcbbox == "整数型":
-                    dfont = "・性質：数値（整数）\n・範囲：-32,768から32,767 \n・使用RAMを2バイト\n・備考：小数点以下は代入されません。"
+                    dfont = "・性質：数値（整数）\n・範囲：-32,768から32,767 \n・使用RAMを2バイト\n・備考：小数点以下は考慮されません。"
 
                 elif HelpDcbbox == "長整数型":
-                    dfont = "・性質：数値（整数）\n・範囲：-2,147,483,648から2,147,483,647\n・使用RAM：4バイト。\n・備考：小数点以下は代入されません。"
+                    dfont = "・性質：数値（整数）\n・範囲：-2,147,483,648から2,147,483,647\n・使用RAM：4バイト。\n・備考：小数点以下は考慮されません。"
 
                 elif HelpDcbbox == "単精度浮動小数点型":
                     dfont = "・性質：数値（少数）\n・範囲：±3.4×10^38\n・使用RAM：4バイト\n・備考：少数の処理が可能です。"
 
                 elif HelpDcbbox == "文字列型":
-                    dfont = "・性質：文字列\n・範囲：約20×10^7文字\n・使用RAM：2バイト\n・備考：数字を入力しても文字列になります。"
+                    dfont = "・性質：文字列\n・範囲：約20×10^7文字\n・使用RAM：2バイト\n・備考：文字列を代入することができます。"
 
                 elif HelpDcbbox == "ALLデータ型":
                     dfont = "・性質：すべて\n・範囲：すべて\n・使用RAM：16バイト\n・備考：多くRAMを使用するため非推奨。"
@@ -486,28 +600,32 @@ def Hojyo():
                     dACwinodw.activate()
                 except IndexError:
                     CountdWindow = CountdWindow -1
-                    return ("Dhelp")
 
             def dclose():
-
                 global CountdWindow
-
                 CountdWindow = CountdWindow -1
-                print(CountdWindow)
+                print("dWindow Count = " + str(CountdWindow))
                 dWindow.destroy()    
 
             dWindow.protocol("WM_DELETE_WINDOW", dclose)
 
         def close():
             global sCount
+            global CountdWindow
             sCount = sCount - 1
-            print(sCount)
+            print("sWindows Count = " + str(sCount))
+            if CountdWindow == 0:
+                pass
+            elif CountdWindow == 1:
+                CountdWindow = CountdWindow -1
+            else:
+                tkinter.messagebox.showerror("ERROR","範囲：CountdWindow")
             sWindow.destroy()
 
         sWindow.protocol("WM_DELETE_WINDOW", close)
 
         mainclip_button = tkinter.Button(sWindow, text="メソッド挿入",command=mainclip,width=20,height=3)
-        mainclip_button.place(x=100,y=130)
+        mainclip_button.place(x=100,y=150)
 
         Dhelp_button = tkinter.Button(sWindow,text="型とは？", command=Dhelp,width=10,height=1)
         Dhelp_button.place(x=280,y=60)
@@ -515,9 +633,9 @@ def Hojyo():
         sACwindows = gw.getWindowsWithTitle("関数の補助")[0]
         sACwindows.activate()
 
-        time.sleep(1)
+        time.sleep(0.5)
 
-        print("sCount ERROR!! sCount is " + str(sCount))
+        print("sCount ERROR!! sCount = " + str(sCount))
     
 Execute_button = tkinter.Button(text="Execute",command=exe,width=16,height=3)
 Execute_button.place(x=70,y=140)
