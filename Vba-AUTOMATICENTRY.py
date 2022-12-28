@@ -1,660 +1,526 @@
-from asyncore import write
-from cgitb import text
-from logging import exception
-from multiprocessing import AuthenticationError
 import tkinter, tkinter.messagebox
 from tkinter import ttk
-import tkinter.font as f
-from numpy import insert
-import pyautogui
-import pyperclip
+import tkinter .font as f
+from tkinter import filedialog
+
+import os
 import subprocess
-import time
-import pygetwindow as gw
+import json
 
-root = tkinter.Tk()
-root.title("Vba-AUTOMATICENTRY")
-root.geometry("250x270+600+100")
-root.attributes("-topmost", True)
-root.resizable(0,0)
+AskAgree = tkinter.Tk()
+AskAgree.title("システムを起動する前に")
+AskAgree.geometry("580x300")
+AskAgree.resizable(0,0)
 
-mtxtbox = tkinter.Text(root, font=("", 16))
-mtxtbox.place(
-    x=60,
-    y=10,
-    width=150,height=30
+Warning_message_title = tkinter.Label(
+    AskAgree,
+    text="このソフトウェアを利用するにあたって",
+    font=(
+        "",
+        "15",
+        "bold"
     )
-mtxtbox.focus_set()
-mlbl = tkinter.Label(text="オブジェクト")
-mlbl.place(x=0, y=12)
+)
+Warning_message_title.place(x=70,y=10)
 
-otxtbox = tkinter.Text(font=("", 16))
-otxtbox.place(
-    x=60,
-    y=50,
-    width=150,
-    height=30
+Warning_message_1 = tkinter.Label(
+    AskAgree,
+    text="以下の事項を必ずご確認ください",
+    font=(
+        "",
+        "10",
+        "bold"
     )
-olbl = tkinter.Label(text="メソッド")
-olbl.place(x=10, y=52)
+)
+Warning_message_1.place(x=160,y=40)
 
-mckb = tkinter.BooleanVar()
-mckb.set(True)
-
-delckb = tkinter.BooleanVar()
-delckb.set(True)
-
-sCount = 0
-CountdWindow = 0
-
-FXlist = (
-    "Sub",
-    "Range",
-    "AutoFill",
-    "Dim",
-    "IF",
-    "MessageBox",
-    "Worksheets"
+Warning_message_2 = tkinter.Label(
+    AskAgree,
+    text="・利用するPCをインターネットに接続してください。（通信料は利用者負担）",
+    font=(
+        "",
+        "10"
     )
-combobox = ttk.Combobox(
-    root, 
-    values=FXlist, 
-    height= 5,
-    state="readonly",
-    textvariable= tkinter.StringVar(),
+)
+Warning_message_2.place(x=60,y=70)
+
+Warning_message_3 = tkinter.Label(
+    AskAgree,
+    text="・Windows10のみ動作テストを行いました。(Windows以外では正常に動作しません)",
+    font=(
+        "",
+        "10"
     )
-combobox.set(FXlist[0])
+)
+Warning_message_3.place(x=60,y=100)
 
-def exe():
+Warning_message_4 = tkinter.Label(
+    AskAgree,
+    text="・Aviutlをすでに導入されているならば必ずバックアップを行ってください。",
+    font=(
+        "",
+        "10"
+    )
+)
+Warning_message_4.place(x=60,y=130)
 
-    msell = ""
-    osell = ""
+Warning_message_5 = tkinter.Label(
+    AskAgree,
+    text="・いかなる損害にも製作者は対応しません。",
+    font=(
+        "",
+        "10"
+    )
+)
+Warning_message_5.place(x=60,y=160)
 
-    wTitle = "Microsoft Visual Basic for Applications"
+Warning_message_6 = tkinter.Label(
+    AskAgree,
+    text="・その他のルールは製作者のGitHubにある本プログラムのReadmeをご確認ください。",
+    font=(
+        "",
+        "10"
+    )
+)
+Warning_message_6.place(x=60,y=160)
 
-    subprocess.run("echo off | clip", shell=True)
+Warning_message_7 = tkinter.Label(
+    AskAgree,
+    text="上記の項目を確認の上、「同意」を選択してください。",
+    font=(
+        "",
+        "10",
+        "bold"
+    )
+)
+Warning_message_7.place(x=80,y=190)
 
-    msell = mtxtbox.get("1.0", "end-1c")
-    osell = otxtbox.get("1.0", "end-1c")
-    
-    if not mtxtbox.get("1.0", "end-1c") == "":
 
-        eWindow = tkinter.Toplevel()
-        eWindow.title("Running...")
-        eWindow.geometry("250x100+700+0")
-        eWindow.attributes("-topmost", True)
-        eWindow.resizable(0,0)
-        efont = tkinter.Label(eWindow, text="自動操作中",font=("",15))
-        efont.place(x=30, y=20)
+def main():
 
-        eWindow.update()
-        
-        if combobox.get() == "Range":
-            try:
-                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
-                ACwindow.activate()
-                Lmain = "Range(\""
-                Rmain =  "\")"
+    AskAgree.destroy()
 
-                time.sleep(0.5)
+    root = tkinter.Tk()
+    root.title("Aviutl Auto Setup")
+    root.geometry("300x350")
+    root.resizable(0,0)
 
-                pyautogui.write(Lmain)
-                pyperclip.copy(msell)
-                print("msell =" +msell)
-                time.sleep(0.5)
-                pyautogui.hotkey("ctrl", "v")
-                pyautogui.write(Rmain)
+    Select_version_lavel = tkinter.Label(
+        root,
+        text="1.ソフトウェアの選択",
+        font=(
+            "",
+            "10",
+            "bold"
+        )
+    )
+    Select_version_lavel.place(x=10,y=10)
 
-                if not osell=="":
-                    pyperclip.copy(osell)
-                    print("osell =" + osell)
-                    time.sleep(0.5)
-                    pyautogui.hotkey("ctrl", "v")
-                else:
-                    pass
+    Aviutl_exe_ckb = tkinter.BooleanVar()
+    Aviutl_exe_ckb.set(True)
+    Aviutl_exe_checkbox = tkinter.Checkbutton(
+        root,
+        variable=Aviutl_exe_ckb
+    )
+    Aviutl_exe_checkbox.place(x=30,y=50)
 
-                pyautogui.press("Return")
+    Aviutl_exe_checkbox = tkinter.Checkbutton(
+        root,
+        variable=Aviutl_exe_ckb
+    )
+    Aviutl_exe_checkbox.place(x=30,y=50)
 
-            except Exception as e:
-                tkinter.messagebox.showerror("ERROR", "範囲：Range")
+    Aviutl_exe_List = (
+        "Aviutl Version1.10",
+    )
 
-        elif combobox.get()=="Sub":
-            ACwindow = gw.getWindowsWithTitle(wTitle)[0]
-            ACwindow.activate()
+    Aviutl_exe_Combobox = ttk.Combobox(
+        root,
+        values=Aviutl_exe_List,
+        height=5,
+        width=30,
+        state="readonly",
+        textvariable= tkinter.StringVar()
+    )
+    Aviutl_exe_Combobox.set(Aviutl_exe_List[0])
+    Aviutl_exe_Combobox.place(x=60,y=50)
 
-            time.sleep(0.5)
+    Extend_Editor_ckb = tkinter.BooleanVar()
+    Extend_Editor_ckb.set(True)
+    Extend_Editor_checkbox = tkinter.Checkbutton(
+        root,
+        variable=Extend_Editor_ckb
+    )
+    Extend_Editor_checkbox.place(x=30,y=80)
 
-            try:
-                print("msell = " + msell)
-                pyperclip.copy(msell)
-                
-                pyautogui.write("Sub ")
-                pyautogui.hotkey("ctrl", "v")
+    Extend_Editor_List = (
+        "拡張編集プラグイン Version0.92",
+    )
 
-                pyautogui.write(" ()")
-                pyautogui.press("Return")
-                pyautogui.press("Tab")
+    Extend_Editor_Combbox = ttk.Combobox(
+        root,
+        values=Extend_Editor_List,
+        height=10,
+        width=30,
+        state="readonly",
+        textvariable=tkinter.StringVar()
+    )
+    Extend_Editor_Combbox.set(Extend_Editor_List[0])
+    Extend_Editor_Combbox.place(x=60,y=80)
 
-                if mckb.get()==True:
-                    pyautogui.write("Cells.delet")
-                    pyautogui.press("Return")
-                
-            except Exception as e:
-                tkinter.messagebox.showerror("ERROR", "範囲：sub")
+    LSMASH_ckb = tkinter.BooleanVar()
+    LSMASH_ckb.set(True)
+    LSMASH_checkbox = tkinter.Checkbutton(
+        root,
+        variable=LSMASH_ckb,
+    )
+    LSMASH_checkbox.place(x=30,y=110)
 
-        elif combobox.get()=="AutoFill":
+    LSMASH_List = (
+        "L-SMASH-Works_Rev1100",
+    )
 
-            try:
-                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
-                ACwindow.activate()
-                Lmain = "Range(\""
-                Nmain = ".Autofill Destination:="
-                Rmain = "\")"
+    LSMASH_combobox = ttk.Combobox(
+        root,
+        values=LSMASH_List,
+        height=10,
+        width=30,
+        state="readonly",
+        textvariable=tkinter.StringVar()
+    )
+    LSMASH_combobox.set(LSMASH_List[0])
+    LSMASH_combobox.place(x=60,y=110)
 
-                time.sleep(0.5)
+    Encoder_ckb = tkinter.BooleanVar()
+    Encoder_ckb.set(True)
+    Encoder_checkbox = tkinter.Checkbutton(
+        root,
+        variable=Encoder_ckb
+    )
+    Encoder_checkbox.place(x=30,y=140)
 
-                pyautogui.write(Lmain)
+    Encoder_List = (
+        "x264guiEx",
+        "かんたんMP4出力"
+    )
 
-                pyperclip.copy(msell)
-                pyautogui.hotkey("ctrl", "v")
+    Encoder_combobox = ttk.Combobox(
+        root,
+        values=Encoder_List,
+        height=10,
+        width=30,
+        state="readonly",
+        textvariable=tkinter.StringVar()
+    )
+    Encoder_combobox.set(Encoder_List[0])
+    Encoder_combobox.place(x=60,y=140)
 
-                pyautogui.write(Rmain)
-                pyautogui.write(Nmain)
-                pyautogui.write(Lmain)
+    Setup_folder_path_lavel = tkinter.Label(
+        root,
+        text="2.構築先フォルダを選択",
+        font=(
+            "",
+            "10",
+            "bold"
+        )
+    )
+    Setup_folder_path_lavel.place(x=10,y=170)
 
-                pyperclip.copy(osell)
-                pyautogui.hotkey("ctrl", "v")
-                    
-                pyautogui.write(Rmain)
-                pyautogui.press("Return")              
-            
-            except Exception as e:
-                tkinter.messagebox.showerror("ERROR", "範囲：AutoFill")
-            
-        elif combobox.get() == "Dim":
-            try:
-                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
-                ACwindow.activate()
+    Setup_folder_path_textbox = tkinter.Entry(
+        root,
+        font=(
+            "",
+            12
+        )
+    )
+    Setup_folder_path_textbox.place(
+        x=30,
+        y=200,
+        width=180,
+        height=30
+    )
 
-                time.sleep(0.5)
+    def Select_Setup_folder_path():
+        Setup_folder_path = (filedialog.askdirectory())
 
-                pyautogui.write("Dim ")
-                pyperclip.copy(msell)
-                pyautogui.hotkey("ctrl", "v")
+        if not Setup_folder_path == "":
 
-                pyautogui.write("As ")
-                pyperclip.copy(osell)
-                pyautogui.hotkey("ctrl", "v")
-                
-                pyautogui.press("Return")
+            if not Setup_folder_path_textbox.get() == "":
+                Setup_folder_path_textbox.delete("0","end")
+            else:
+                pass
 
-            except Exception as e:
-                tkinter.messagebox.showerror("ERROR", "範囲：Dim")
-            
-            if delckb.get() == True:
-                mtxtbox.delete("1.0", "end-1c")
-                otxtbox.delete("1.0", "end-1c")
-
-        elif combobox.get() == "MessageBox":
-            try:
-                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
-                ACwindow.activate()
-
-                time.sleep(0.5)
-
-                pyautogui.write("Msgbox \"")
-                pyperclip.copy(msell)
-                pyautogui.hotkey("ctrl", "v")
-                pyautogui.write("\"")
-                
-
-                if not osell == "":
-                    pyautogui.write(",title:=\"")
-                    pyperclip.copy(osell)
-                    pyautogui.hotkey("ctrl", "v")
-                    pyautogui.write("\"")
-
-                pyautogui.press("Return")
-
-            except Exception as e:
-                tkinter.messagebox.showerror("ERROR", "範囲：MessageBox")
-
-        elif combobox.get() == "Worksheets":
-            try:
-                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
-                ACwindow.activate()
-
-                time.sleep(0.5)
-
-                pyautogui.write("worksheets(\"")
-                pyperclip.copy(msell)
-                pyautogui.hotkey("ctrl", "v")
-                pyautogui.write("\")")
-                if not osell == "":
-                    pyperclip.copy(osell)
-                    pyautogui.hotkey("ctrl", "v")
-                else:
-                    pass
-
-                pyautogui.press("Return")
-
-            except Exception as e:
-                tkinter.messagebox.showerror("ERROR", "範囲：worksheets")
-
-        elif combobox.get()=="IF": 
-            try:
-                ACwindow = gw.getWindowsWithTitle(wTitle)[0]
-                ACwindow.activate()
-
-                time.sleep(0.5)
-
-                pyautogui.write("if Range(\"") 
-
-                time.sleep(0.5)
-
-                pyperclip.copy(msell)
-
-                time.sleep(0.5)
-
-                pyautogui.hotkey("ctrl","v")
-                
-                pyautogui.write("\")")
-
-                time.sleep(0.5)
-                pyperclip.copy(osell)
-                pyautogui.hotkey("ctrl","v")
-
-                pyautogui.write(" then")
-
-                pyautogui.press("Return")
-                pyautogui.press("Tab")
-                pyautogui.press("Return")
-                pyautogui.press("BackSpace")
-                pyautogui.write("else")
-                pyautogui.press("Return")
-                pyautogui.press("Tab")
-                pyautogui.press("Return")
-                pyautogui.press("BackSpace")
-                pyautogui.write("end if")
-
-                pyautogui.press("up")
-                pyautogui.press("up")
-                pyautogui.press("up")
-
-            except Exception as e:
-                tkinter.messagebox.showerror("ERROR", "範囲：IF")
-
-        else:
-            tkinter.messagebox.showerror("ERROR", "Combobox RANGE ERROR")
-
-        if delckb.get() == True:
-            mtxtbox.delete("1.0", "end-1c")
-            otxtbox.delete("1.0", "end-1c")
+            Setup_folder_path_textbox.insert(
+                0,
+                Setup_folder_path.replace("/","\\") + "\\"
+            )
         else:
             pass
 
-        subprocess.run("echo off | clip", shell=True)
-        mtxtbox.focus()
+    def Execute():
 
-        eWindow.destroy()
+        path = Setup_folder_path_textbox.get()
 
-    else:
-        tkinter.messagebox.showerror("ERROR", "文字を入力してください。")
-
-    
-def mdelete():
-    mtxtbox.delete("1.0", "end-1c")
-    mtxtbox.focus()
-
-def odelete():
-    otxtbox.delete("1.0", "end-1c")
-    otxtbox.focus()
-
-def Hojyo():
-    
-    global sCount
-    sRadio = tkinter.IntVar()
-    sRadio.set(0)
-    if sCount == 0:
-        sCount = sCount + 1
-        sWindow = tkinter.Toplevel()
-
-        sWindow.title("関数の補助")
-        sWindow.geometry("380x200")
-
-        sWindow.attributes("-topmost", True)
-        sWindow.resizable(0,0)
-
-        FRadio = tkinter.Radiobutton(
-            sWindow,
-            value=0,
-            variable=sRadio,
-            text="色の設定"
-        )
-        FRadio.place(x=10, y=30)
-
-        Flist = ("文字の色", "セルの色")
-        Fcombobox = ttk.Combobox(
-            sWindow, 
-            values=Flist, 
-            height= 6,
-            width= 20,
-            state="readonly",
-            textvariable= tkinter.StringVar(),
-        )
-        Fcombobox.set(Flist[0])
-        Fcombobox.place(x=100, y=30)
-
-        cIquT = tkinter.Label(sWindow, text="=", font=("nomal", "16", "bold"))
-        cIquT.place(x=270, y=26)
-
-        cIquB = tkinter.Text(
-            sWindow,
-            font=("", "17"),
-            width=4,
-            height=1
-        )
-        cIquB.place(x=300, y=27)
-
-        DRadio = tkinter.Radiobutton(
-            sWindow,
-            value=1,
-            variable=sRadio,
-            text="変数の型"
-        )
-        DRadio.place(x=10, y=60)
-
-        Dlist = (
-            "バイト型",
-            "整数型",
-            "長整数型", 
-            "単精度浮動小数点型", 
-            "文字列型", 
-            "ALLデータ型"
-        )
-        Dcombobox = ttk.Combobox(
-            sWindow, 
-            values = Dlist, 
-            height = 6,
-            width = 25,
-            state ="readonly",
-            textvariable = tkinter.StringVar(),
-        )
-        Dcombobox.set(Dlist[0])
-        Dcombobox.place(x=100, y=60)
-
-        Border_Radio = tkinter.Radiobutton(
-            sWindow,
-            value=2,
-            variable=sRadio,
-            text="罫線"
-        )
-        Border_Radio.place(x=10, y=90)
-
-        Border_Style_List = (
-            "線なし",
-            "一重線",
-            "二重線",
-            "破線",
-            "一点鎖線",
-            "二点鎖線",
-            "点線",
-            "斜破線"
-        )
-
-        Border_Style_Combobox = ttk.Combobox(
-            sWindow,
-            values = Border_Style_List,
-            height = 6,
-            width = 25,
-            state = "readonly",
-            textvariable = tkinter.StringVar()
-        )
-        Border_Style_Combobox.set(Border_Style_List[0])
-        Border_Style_Combobox.place(x=100,y=90)
-
-        Border_Style_Weight_List = (
-            "極細線",
-            "細線",
-            "中太線",
-            "太線"
-        )
-
-        Border_Style_Weight_Combobox = ttk.Combobox(
-            sWindow,
-            values = Border_Style_Weight_List,
-            height = 6,
-            width = 25,
-            state = "readonly",
-            textvariable = tkinter.StringVar()
-        )
-        Border_Style_Weight_Combobox.set(Border_Style_Weight_List[0])
-        Border_Style_Weight_Combobox.place(x=100,y=120)
-
-
-        def mainclip():
-
-            CountdWindow = 0
-
-            global otxtbox
-            global combobox
-            otxtbox.delete("1.0", "end-1c")
-
-            if sRadio.get() == 0:
-
-                if Fcombobox.get() == "文字の色":
-                    otxtbox.insert("1.0", ".font.colorindex=" + str(cIquB.get("1.0", "end-1c")))
-                    combobox.set(FXlist[1])
-                elif Fcombobox.get() == "セルの色":
-                    otxtbox.insert("1.0", ".Interior.colorindex=" + str(cIquB.get("1.0", "end-1c")))
-                    combobox.set(FXlist[1])
+        if path =="":
+            tkinter.messagebox.showerror("エラー", "構築先を選択してください。")
+        else:
+            if os.path.exists("Cache") == True:
+                Cache_Check = tkinter.messagebox.askquestion(
+                    "エラー",
+                    "一時フォルダ\"Cache\"がすでに存在します。\n 削除してもよろしいですか？"
+                )
+                if Cache_Check == "yes":
+                    subprocess.run("rd /S /Q Cache",shell=True)
                 else:
-                    tkinter.messagebox.showerror("ERROR", "範囲：mainclip Fcombobox sRadio")
+                    tkinter.messagebox.showerror("エラー","処理を継続できません")
+                    return
+            else:
+                pass
 
-            if sRadio.get() == 1:
+            subprocess.run("mkdir Cache",shell=True)
 
-                Dcbbox = Dcombobox.get()
+            if os.path.exists(path + "Plugins") == False:
+                subprocess.run("mkdir " + path + "Plugins",shell=True)
+            else:
+                pass
 
-                if Dcbbox == "バイト型":
-                    otxtbox.insert("1.0", "Byte")
-                    combobox.set(FXlist[3])
+            URL_json = json.load(open("DownloadLinks.json","r"))
 
-                elif Dcbbox == "整数型":
-                    otxtbox.insert("1.0", "integer")
+            if Aviutl_exe_ckb.get() == True:
 
-                elif Dcbbox == "長整数型":
-                    otxtbox.insert("1.0", "Long")
-                    combobox.set(FXlist[3])
+                print("Downloading Aviutl...")
+                subprocess.run(
+                    "powershell -Command \"(New-Object Net.WebClient).DownloadFile(\'" + URL_json["Aviutlexe"]["URL"] + "\', 'Cache\\Aviutl110.zip')\"",
+                    shell=True
+                )
 
-                elif Dcbbox == "単精度浮動小数点型":
-                    otxtbox.insert("1.0", "single")
-                    combobox.set(FXlist[3])
+                print("Unzip Aviutl.zip...")
+                subprocess.run(
+                    "powershell -command \"Expand-Archive Cache\\Aviutl110.zip Cache\\Aviutl110\"",
+                    shell=True
+                )
 
-                elif Dcbbox == "文字列型":
-                    otxtbox.insert("1.0", "String")
-                    combobox.set(FXlist[3])
-
-                elif Dcbbox == "ALLデータ型":
-                    otxtbox.insert("1.0", "Variant")
-                    combobox.set(FXlist[3])
-
+                print("Moving Aviutl.exe...")
+                subprocess.run(
+                    "move /Y Cache\\aviutl110\\* " + path,
+                    shell=True
+                )
+                if os.path.exists(path+"Aviutl.exe") == True:
+                    print("Aviutl.exe Check OK")
                 else:
-                    tkinter.messagebox.showerror("ERROR", "範囲：mainclip Dcombobox sRando")
-            
-            if sRadio.get() == 2:
-                Border_Style_get = Border_Style_Combobox.get()
+                    tkinter.messagebox.showerror("エラー","Aviutl.exeの取得に失敗しました")
+                    return
 
-                if Border_Style_get == "線なし":
-                    Border_Style_inst = "xlLineStyleNone"
+            else:
+                print("NOT Check")
 
-                elif Border_Style_get == "一重線":
-                    Border_Style_inst = "xlContinuous"
+            if Extend_Editor_ckb.get() == True:
+                print("Downloading Extend_Editor...")
+                subprocess.run(
+                    "powershell -Command \"(New-Object Net.WebClient).DownloadFile(\'" + URL_json["ExtendEditor"]["URL"] + "\', 'Cache\\exedit92.zip')\"",
+                    shell=True
+                )
 
-                elif Border_Style_get == "二重線":
-                    Border_Style_inst = "xlDouble"
+                print("Unzip exedit92.zip...")
+                subprocess.run(
+                    "powershell -command \"Expand-Archive Cache\\exedit92.zip Cache\\exedit92\"",
+                    shell=True
+                )
 
-                elif Border_Style_get == "破線":
-                    Border_Style_inst = "xlDash"
-
-                elif Border_Style_get == "一点鎖線":
-                    Border_Style_inst = "xlDashDot"
-                
-                elif Border_Style_get == "二点鎖線":
-                    Border_Style_inst
-
-                elif Border_Style_get == "点線":
-                    Border_Style_inst == "xlDot"
-
-                elif Border_Style_get == "斜破線":
-                    Border_Style_inst == "xlSlantDashDot"
-
+                print("Moving exedit92...")
+                subprocess.run(
+                    "move /Y Cache\\exedit92\\* " + path,
+                    shell=True
+                )
+                if os.path.exists(path+"exedit.auf") == True:
+                    print("exedit.auf Check OK")
                 else:
-                    tkinter.messagebox.showerror("ERROR", "範囲エラー：Border_Style")
-                
-                Border_style_Weight_get = Border_Style_Weight_Combobox.get()
-                
-                if Border_style_Weight_get == "極細線":
-                    Border_Style_Weight_inst = "xlHairline"
-                
-                elif Border_style_Weight_get == "細線":
-                    Border_Style_Weight_inst = "xlThin"
+                    tkinter.messagebox.showerror("エラー","拡張編集プラグインの取得に失敗しました")
+                    return
+            else:
+                print("NOT Check")
 
-                elif Border_style_Weight_get == "中太線":
-                    Border_Style_Weight_inst = "xlMedium"
-                
-                elif Border_style_Weight_get == "太線":
-                    Border_Style_Weight_inst = "xlThick"
-                
+            if LSMASH_ckb.get() == True:
+                print("Downloading L-SMASH...")
+                subprocess.run(
+                    "powershell -Command \"(New-Object Net.WebClient).DownloadFile(\'" + URL_json["L-SMASH"]["URL"] + "\', 'Cache\\L-SMASH-Works.zip')\"",  
+                    shell=True 
+                )
+
+                print("Unzip L-SMASH...")
+                subprocess.run(
+                    "powershell -command \"Expand-Archive Cache\\L-SMASH-Works.zip Cache\\L-SMASH-Works\"",
+                    shell=True
+                )
+
+                print("Moving L-SMASH...")
+                plugins_path = path + "Plugins\\"
+                subprocess.run(
+                    "move /Y Cache\\L-SMASH-Works\\*.auf " + plugins_path,
+                    shell=True
+                )
+                subprocess.run(
+                    "move /Y Cache\\L-SMASH-Works\\lwcolor.auc " + plugins_path,
+                    shell=True
+                )
+                subprocess.run(
+                    "move /Y Cache\\L-SMASH-Works\\lwinput.aui " + plugins_path,
+                    shell=True
+                )
+
+                if os.path.exists(plugins_path+"lwinput.aui") == True:
+                    print("lwinput.aui Check OK")
                 else:
-                    tkinter.messagebox.showerror("ERROR", "範囲エラー：Border_style_Weight")
+                    tkinter.messagebox.showerror("エラー","L-SMASH-Worksの取得に失敗しました")
+                    return
+            else:
+                print("NOT Check")
 
-                #print(Border_Style_inst)
-                #print(Border_Style_Weight_inst)
+            if Encoder_ckb.get() == True:
+                if Encoder_combobox.get() == "x264guiEx":
 
-                pyautogui.write("")
-
-                otxtbox.insert(
-                    "1.0",
-                    ".BorderAround " + Border_Style_inst + " , " + Border_Style_Weight_inst + " , " + str(cIquB.get("1.0", "end-1c"))
+                    print("Downloading x264guiEx...")
+                    subprocess.run(
+                        "powershell -Command \"(New-Object Net.WebClient).DownloadFile(\'" + URL_json["x264guiEx"]["URL"] + "\', 'Cache\\x264guiEx.zip')\"",  
+                        shell=True 
                     )
 
-                combobox.set(FXlist[1])
+                    print("Unzip x264guiEx...")
+                    subprocess.run(
+                        "powershell -command \"Expand-Archive Cache\\x264guiEx.zip Cache\\x264guiEx\"",
+                        shell=True
+                    )
 
-            hACwinodw = gw.getWindowsWithTitle("Vba-AUTOMATICENTRY")[0]
-            hACwinodw.activate()
+                    print("Moving x264guiEx...")
 
-        def Dhelp():
+                    subprocess.run(
+                        "move /Y Cache\\x264guiEx\\x264gui_3.16\\x264guiEx_readme.txt " + path,
+                        shell=True
+                    )
+                    if os.path.exists(path + "exe_files") == True:
+                        pass
+                    else:
+                        subprocess.run(
+                            "mkdir " + path + "exe_files",
+                            shell=True
+                        )
 
-            global CountdWindow
+                    subprocess.run(
+                        "echo D | xcopy Cache\\x264guiEx\\x264guiEx_3.16\\exe_files\\* " + path + "exe_files /E /H /C /I",
+                        shell=True 
+                    )
 
-            if CountdWindow == 0:
+                    if os.path.exists(path+"Plugins") == True:
+                        pass
+                    else:
+                        subprocess.run(
+                            "mkdir " + path + "Plugins",
+                            shell=True
+                        )
 
-                CountdWindow = 1
+                    subprocess.run(
+                        "echo D | xcopy Cache\\x264guiEx\\x264guiEx_3.16\\plugins\\* " + path + "Plugins /E /H /C /I",
+                        shell=True
+                    )
 
-                dWindow = tkinter.Toplevel(master=sWindow)
-                dWindow.title("型について")
-                dWindow.geometry("380x150")
-                dWindow.attributes("-topmost", True)
-                dWindow.resizable(0,0)
+                    if os.path.exists(path + "Plugins\\x264guiEx.auo") == True:
+                        print("x264guiEx.auo Check Ok")
+                    else:
+                        tkinter.messagebox.showerror("エラー", "x264guiExの取得に失敗しました")
+                        return
 
-                HelpDcbbox = Dcombobox.get()
+                elif Encoder_combobox.get() == "かんたんMP4出力":
+                    if os.path.exists(path + "Plugins") == True:
+                        pass
+                    else:
+                        subprocess.run(
+                            "mkdir " + path + "Plugins",
+                            shell=True
+                        )
+                    
+                    print("Downloading easymp4...")
+                    subprocess.run(
+                        "powershell -Command \"(New-Object Net.WebClient).DownloadFile(\'" + URL_json["easyMP4"]["URL"] + "\', 'Cache\\easymp4.zip')\"",  
+                        shell=True 
+                    )
 
-                if HelpDcbbox == "バイト型":
-                    dfont = "・性質：数値（整数）\n・範囲：0から255\n・使用RAM：1バイト\n・備考：小数点以下は考慮されません。"
+                    print("Unzip easymp4...")
+                    subprocess.run(
+                        "powershell -command \"Expand-Archive Cache\\easymp4.zip Cache\\easymp4\"",
+                        shell=True
+                    )
 
-                elif HelpDcbbox == "整数型":
-                    dfont = "・性質：数値（整数）\n・範囲：-32,768から32,767 \n・使用RAMを2バイト\n・備考：小数点以下は考慮されません。"
+                    print("Moving easymp4...")
 
-                elif HelpDcbbox == "長整数型":
-                    dfont = "・性質：数値（整数）\n・範囲：-2,147,483,648から2,147,483,647\n・使用RAM：4バイト。\n・備考：小数点以下は考慮されません。"
+                    subprocess.run(
+                        "move /Y Cache\\easymp4\\easymp4.auo " + path + "Plugins",
+                        shell=True
+                    )
 
-                elif HelpDcbbox == "単精度浮動小数点型":
-                    dfont = "・性質：数値（少数）\n・範囲：±3.4×10^38\n・使用RAM：4バイト\n・備考：少数の処理が可能です。"
-
-                elif HelpDcbbox == "文字列型":
-                    dfont = "・性質：文字列\n・範囲：約20×10^7文字\n・使用RAM：2バイト\n・備考：文字列を代入することができます。"
-
-                elif HelpDcbbox == "ALLデータ型":
-                    dfont = "・性質：すべて\n・範囲：すべて\n・使用RAM：16バイト\n・備考：多くRAMを使用するため非推奨。"
-
+                    if os.path.exists(path + "Plugins\\easymp4.auo") == True:
+                        print("easymp4 Check OK")
+                    else:
+                        tkinter.messagebox.showerror("エラー", "easymp4の取得に失敗しました")
+                        return
                 else:
-                    tkinter.messagebox.showerror("ERROR", "範囲：mainclip Dfont")
+                    tkinter.messagebox.showerror("エラー", "\"Encoder\"にて致命的なエラーが発生しました")
+                    return
+            else:
+                print("NOT Check")
 
-                Tpdfont = tkinter.Label(
-                    dWindow,
-                    text=HelpDcbbox,
-                    font=("",20)
+            if os.path.exists("Cache") == True:
+                print("Delete Cache")
+                subprocess.run(
+                    "rd /S /Q Cache",
+                    shell=True
                 )
-                Tpdfont.place(x=10,y=10)
-
-                pdfont = tkinter.Label(
-                    dWindow,
-                    text=dfont,
-                    justify="left",
-                    font=("",15))
-                pdfont.place(x=10,y=45)
-
             else:
-                try:
-                    dACwinodw = gw.getWindowsWithTitle("型について")[0]
-                    dACwinodw.activate()
-                except IndexError:
-                    CountdWindow = CountdWindow -1
-
-            def dclose():
-                global CountdWindow
-                CountdWindow = CountdWindow -1
-                print("dWindow Count = " + str(CountdWindow))
-                dWindow.destroy()    
-
-            dWindow.protocol("WM_DELETE_WINDOW", dclose)
-
-        def close():
-            global sCount
-            global CountdWindow
-            sCount = sCount - 1
-            print("sWindows Count = " + str(sCount))
-            if CountdWindow == 0:
                 pass
-            elif CountdWindow == 1:
-                CountdWindow = CountdWindow -1
-            else:
-                tkinter.messagebox.showerror("ERROR","範囲：CountdWindow")
-            sWindow.destroy()
 
-        sWindow.protocol("WM_DELETE_WINDOW", close)
+            tkinter.messagebox.showinfo("Aviutl Auto Setup","指定されたソフトウェアの設定が完了しました")
 
-        mainclip_button = tkinter.Button(sWindow, text="メソッド挿入",command=mainclip,width=20,height=3)
-        mainclip_button.place(x=100,y=150)
 
-        Dhelp_button = tkinter.Button(sWindow,text="型とは？", command=Dhelp,width=10,height=1)
-        Dhelp_button.place(x=280,y=60)
-    else:
-        sACwindows = gw.getWindowsWithTitle("関数の補助")[0]
-        sACwindows.activate()
+    Setup_folder_path_button = tkinter.Button(
+        root,
+        text="参照",
+        command=Select_Setup_folder_path,
+        width=6,
+        height=2
+    )
+    Setup_folder_path_button.place(x=220,y=196)
 
-        time.sleep(0.5)
+    Exceute_button = tkinter.Button(
+        root,
+        text="実行",
+        command=Execute,
+        width=20,
+        height=3
+    )
+    Exceute_button.place(x=60,y=250)
 
-        print("sCount ERROR!! sCount = " + str(sCount))
-    
-Execute_button = tkinter.Button(text="Execute",command=exe,width=16,height=3)
-Execute_button.place(x=70,y=140)
+    root.mainloop()
 
-combobox.place(x=35, y=100, width=150, height=25)
+def EXIT():
+    AskAgree.destroy()
 
-Hojyo_button = tkinter.Button(text="関数補助",command=Hojyo,width=7,height=1)
-Hojyo_button.place(x=190,y=100)
+Agree_button = tkinter.Button(
+    AskAgree,
+    text="同意して進む",
+    command=main,
+    width=20,
+    height=3
+)
+Agree_button.place(x=300,y=220)
 
-mdelete_button = tkinter.Button(text="削除",command=mdelete,width=3,height=1)
-mdelete_button.place(x=215,y=12)
+Agree_button = tkinter.Button(
+    AskAgree,
+    text="拒否（終了）",
+    command=EXIT,
+    width=20,
+    height=3
+)
+Agree_button.place(x=100,y=220)
 
-odelete_button = tkinter.Button(text="削除",command=odelete,width=3,height=1)
-odelete_button.place(x=215,y=52)
+AskAgree.mainloop()
 
-ckbox = tkinter.Checkbutton(root, variable=mckb, text="Cells.deleteの入力")
-ckbox.place(x=10, y=200)
 
-delckbox = tkinter.Checkbutton(root, variable=delckb, text="実行後のクリア")
-delckbox.place(x=140, y=200)
-
-root.mainloop()
