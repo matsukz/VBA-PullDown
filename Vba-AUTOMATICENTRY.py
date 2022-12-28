@@ -500,7 +500,7 @@ def main():
 
     root.mainloop()
 
-def EXIT():
+def Refuse():
     AskAgree.destroy()
 
 Agree_button = tkinter.Button(
@@ -515,7 +515,7 @@ Agree_button.place(x=300,y=220)
 Agree_button = tkinter.Button(
     AskAgree,
     text="拒否（終了）",
-    command=EXIT,
+    command=Refuse,
     width=20,
     height=3
 )
